@@ -1,0 +1,174 @@
+<%- include('../layouts/header', { titulo: 'Administrar Citas' }) %>
+
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5">
+
+    <h1 class="mb-4">Administrar Citas</h1>
+
+    <table class="table table-bordered table-striped">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Teléfono</th>
+                <th>Barbero</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Observación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <% citas.forEach(cita => { %>
+
+                <tr id="cita-<%= cita.id %>">
+
+                    <td><%= cita.id %></td>
+                    <td><%= cita.cliente %></td>
+                    <td><%= cita.telefono %></td>
+                    <td><%= cita.barbero %></td>
+
+                    <td><%= cita.fecha.toString().split('T')[0] %></td>
+                    <td><%= cita.hora %></td>
+
+                    <td class="estado">
+                        <%= cita.estado %>
+                    </td>
+
+                    <td><%= cita.observacion %></td>
+
+                    <td>
+
+                        <button class="btn btn-success btn-sm confirmar-btn" data-id="<%= cita.id %>">
+                            Confirmar
+                        </button>
+
+                        <button class="btn btn-primary btn-sm finalizar-btn" data-id="<%= cita.id %>">
+                            Finalizar
+                        </button>
+
+                        <button class="btn btn-warning btn-sm cancelar-btn" data-id="<%= cita.id %>">
+                            Cancelar
+                        </button>
+
+                        <button class="btn btn-dark btn-sm eliminar-btn" data-id="<%= cita.id %>">
+                            Eliminar
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            <% }) %>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    function actualizarEstado(id, url, fila, nuevoEstado) {
+
+        fetch(url, {
+            method: 'POST'
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            if (data.ok) {
+                fila.querySelector('.estado').innerText = nuevoEstado;
+            } else {
+                alert('Error al actualizar');
+            }
+
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Error de servidor');
+        });
+
+    }
+
+    // CONFIRMAR
+    document.querySelectorAll('.confirmar-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const fila = document.getElementById('cita-' + id);
+
+            actualizarEstado(
+                id,
+                '/admin/citas/confirmar/' + id,
+                fila,
+                'confirmada'
+            );
+        });
+    });
+
+    // FINALIZAR
+    document.querySelectorAll('.finalizar-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const fila = document.getElementById('cita-' + id);
+
+            actualizarEstado(
+                id,
+                '/admin/citas/finalizar/' + id,
+                fila,
+                'finalizada'
+            );
+        });
+    });
+
+    // CANCELAR
+    document.querySelectorAll('.cancelar-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const fila = document.getElementById('cita-' + id);
+
+            actualizarEstado(
+                id,
+                '/admin/citas/cancelar/' + id,
+                fila,
+                'cancelada'
+            );
+        });
+    });
+
+    // ELIMINAR
+    document.querySelectorAll('.eliminar-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+
+            if (!confirm('¿Seguro que deseas eliminar esta cita?')) return;
+
+            const id = btn.dataset.id;
+            const fila = document.getElementById('cita-' + id);
+
+            fetch('/admin/citas/eliminar/' + id, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.ok) {
+                    fila.remove();
+                } else {
+                    alert('Error al eliminar');
+                }
+
+            });
+
+        });
+    });
+
+});
+</script>
+
+<%- include('../layouts/footer') %>

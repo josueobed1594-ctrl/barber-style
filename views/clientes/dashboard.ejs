@@ -1,0 +1,36 @@
+<%- include('../layouts/header', { titulo }) %>
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5">
+
+<h1>Mis Citas</h1>
+
+<table class="table table-bordered">
+
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Hora</th>
+<th>Estado</th>
+<th>Observación</th>
+</tr>
+</thead>
+
+<tbody>
+
+<% citas.forEach(c => { %>
+<tr>
+<td><%= c.fecha %></td>
+<td><%= c.hora %></td>
+<td><%= c.estado %></td>
+<td><%= c.observacion %></td>
+</tr>
+<% }) %>
+
+</tbody>
+
+</table>
+
+</div>
+
+<%- include('../layouts/footer') %>

@@ -1,0 +1,122 @@
+<%- include('../layouts/header', { titulo: titulo || 'Dashboard Administrativo' }) %>
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5">
+
+<h1 class="mb-4">Dashboard Administrativo</h1>
+
+<!-- MÉTRICAS -->
+<div class="row">
+
+    <div class="col-md-3">
+        <div class="card text-bg-warning mb-3">
+            <div class="card-body text-center">
+                <h5>Pendientes</h5>
+                <h2><%= data.pendientes %></h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-success mb-3">
+            <div class="card-body text-center">
+                <h5>Confirmadas</h5>
+                <h2><%= data.confirmadas %></h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-danger mb-3">
+            <div class="card-body text-center">
+                <h5>Canceladas</h5>
+                <h2><%= data.canceladas %></h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-primary mb-3">
+            <div class="card-body text-center">
+                <h5>Finalizadas</h5>
+                <h2><%= data.finalizadas %></h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MÉTRICAS TIEMPO -->
+<div class="row mt-4">
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5>Hoy</h5>
+                <h2><%= resumen.hoy %></h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5>Semana</h5>
+                <h2><%= resumen.semana %></h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5>Mes</h5>
+                <h2><%= resumen.mes %></h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<!-- JSON seguro -->
+<input type="hidden" id="dashboardData" value='<%- JSON.stringify(data) %>'>
+
+<div class="mt-4">
+    <canvas id="graficoCitas"></canvas>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const dashboardData =
+    JSON.parse(document.getElementById('dashboardData').value);
+
+new Chart(document.getElementById('graficoCitas'), {
+    type: 'bar',
+    data: {
+        labels: ['Pendientes','Confirmadas','Canceladas','Finalizadas'],
+        datasets: [{
+            label: 'Citas',
+            data: [
+                dashboardData.pendientes,
+                dashboardData.confirmadas,
+                dashboardData.canceladas,
+                dashboardData.finalizadas
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+</script>
+
+<%- include('../layouts/footer') %>

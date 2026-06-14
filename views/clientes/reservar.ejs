@@ -1,0 +1,197 @@
+<%- include('../layouts/header', { titulo: 'Reservar Cita' }) %>
+
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5">
+
+    <h1 class="mb-4">
+        Reservar Cita
+    </h1>
+
+    <form action="/reservar" method="POST">
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Nombre
+                </label>
+
+                <input
+                    type="text"
+                    name="nombre"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Teléfono
+                </label>
+
+                <input
+                    type="text"
+                    name="telefono"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Email
+            </label>
+
+            <input
+                type="email"
+                name="email"
+                class="form-control"
+            >
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                Servicios
+            </label>
+
+            <% servicios.forEach(servicio => { %>
+
+                <div class="form-check">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="servicios"
+                        value="<%= servicio.id %>"
+                    >
+
+                    <label class="form-check-label">
+
+                        <strong>
+                            <%= servicio.nombre %>
+                        </strong>
+
+                        -
+                        S/ <%= servicio.precio %>
+
+                    </label>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Barbero
+            </label>
+
+            <select
+                name="barbero_id"
+                class="form-control"
+                required
+            >
+
+                <option value="">
+                    Seleccione un barbero
+                </option>
+
+                <% barberos.forEach(barbero => { %>
+
+                    <option value="<%= barbero.id %>">
+
+                        <%= barbero.nombre %>
+
+                    </option>
+
+                <% }) %>
+
+            </select>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Fecha
+                </label>
+
+                <input
+                    type="date"
+                    name="fecha"
+                    class="form-control"
+                    required
+                >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+                    Hora
+                </label>
+
+                <select
+                    name="hora"
+                    class="form-control"
+                    required
+                >
+
+                    <option value="09:00:00">09:00</option>
+                    <option value="10:00:00">10:00</option>
+                    <option value="11:00:00">11:00</option>
+                    <option value="12:00:00">12:00</option>
+                    <option value="13:00:00">13:00</option>
+                    <option value="14:00:00">14:00</option>
+                    <option value="15:00:00">15:00</option>
+                    <option value="16:00:00">16:00</option>
+                    <option value="17:00:00">17:00</option>
+                    <option value="18:00:00">18:00</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+                Observación
+            </label>
+
+            <textarea
+                name="observacion"
+                class="form-control"
+                rows="3"
+            ></textarea>
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-warning btn-lg">
+
+            Reservar Cita
+
+        </button>
+
+    </form>
+
+</div>
+
+<%- include('../layouts/footer') %>

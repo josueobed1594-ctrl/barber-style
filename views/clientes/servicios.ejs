@@ -1,0 +1,51 @@
+<%- include('../layouts/header', { titulo: 'Servicios | Barber Style' }) %>
+
+<%- include('../layouts/navbar') %>
+
+<div class="container py-5">
+
+    <h1 class="text-center mb-5">
+        Nuestros Servicios
+    </h1>
+
+    <div class="row">
+
+        <% servicios.forEach(servicio => { %>
+
+            <div class="col-md-6 col-lg-4 mb-4">
+
+                <div class="card h-100">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+                            <%= servicio.nombre %>
+                        </h4>
+
+                        <p class="card-text">
+                            <%= servicio.descripcion %>
+                        </p>
+
+                        <p>
+                            <strong>Precio:</strong>
+                            S/ <%= servicio.precio %>
+                        </p>
+
+                        <p>
+                            <strong>Duración:</strong>
+                            <%= servicio.duracion %> min
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        <% }) %>
+
+    </div>
+
+</div>
+
+<%- include('../layouts/footer') %>

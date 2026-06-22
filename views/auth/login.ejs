@@ -16,6 +16,13 @@
                         Iniciar Sesión
                     </h2>
 
+                    <!-- 🔥 MENSAJE DE ERROR -->
+                    <% if (typeof error !== 'undefined') { %>
+                        <div class="alert alert-danger text-center">
+                            <%= error %>
+                        </div>
+                    <% } %>
+
                     <form action="/login" method="POST">
 
                         <div class="mb-3">
@@ -55,8 +62,11 @@
                             Ingresar
 
                         </button>
+
                         <div class="text-center mt-3">
-                            <a href="/register">¿No tienes cuenta? Regístrate</a>
+                            <a href="/register">
+                                ¿No tienes cuenta? Regístrate
+                            </a>
                         </div>
 
                     </form>

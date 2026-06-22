@@ -3,33 +3,95 @@
 
 <div class="container py-5">
 
-<h1>Mis Citas</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<table class="table table-bordered">
+        <h2 class="mb-0">📅 Mis Citas</h2>
 
-<thead>
-<tr>
-<th>Fecha</th>
-<th>Hora</th>
-<th>Estado</th>
-<th>Observación</th>
-</tr>
-</thead>
+        <a href="/reservar" class="btn btn-warning">
+            + Nueva Cita
+        </a>
 
-<tbody>
+    </div>
 
-<% citas.forEach(c => { %>
-<tr>
-<td><%= c.fecha %></td>
-<td><%= c.hora %></td>
-<td><%= c.estado %></td>
-<td><%= c.observacion %></td>
-</tr>
-<% }) %>
+    <% if (citas.length === 0) { %>
 
-</tbody>
+        <div class="alert alert-info text-center">
+            No tienes citas registradas aún.
+        </div>
 
-</table>
+    <% } else { %>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover table-bordered align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Estado</th>
+                        <th>Observación</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <% citas.forEach(c => { %>
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    <%= new Date(c.fecha).toISOString().split('T')[0] %>
+                                </strong>
+                            </td>
+
+                            <td>
+                                <%= c.hora %>
+                            </td>
+
+                            <td>
+
+                                <% if (c.estado === 'pendiente') { %>
+                                    <span class="badge bg-warning text-dark">
+                                        Pendiente
+                                    </span>
+
+                                <% } else if (c.estado === 'confirmada') { %>
+                                    <span class="badge bg-success">
+                                        Confirmada
+                                    </span>
+
+                                <% } else if (c.estado === 'cancelada') { %>
+                                    <span class="badge bg-danger">
+                                        Cancelada
+                                    </span>
+
+                                <% } else { %>
+                                    <span class="badge bg-secondary">
+                                        <%= c.estado %>
+                                    </span>
+                                <% } %>
+
+                            </td>
+
+                            <td>
+                                <%= c.observacion || 'Sin observación' %>
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    <% } %>
 
 </div>
 

@@ -33,7 +33,7 @@
                     <td><%= cita.telefono %></td>
                     <td><%= cita.barbero %></td>
 
-                    <td><%= cita.fecha.toString().split('T')[0] %></td>
+                    <td><%= cita.fecha.toISOString().split('T')[0] %></td>
                     <td><%= cita.hora %></td>
 
                     <td class="estado">

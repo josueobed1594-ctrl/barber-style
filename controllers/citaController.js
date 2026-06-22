@@ -35,31 +35,42 @@ const citaController = {
     guardarReserva: (req, res) => {
 
         const {
-            nombre,
-            telefono,
-            email,
             barbero_id,
             fecha,
             hora,
             observacion
         } = req.body;
 
+        let servicios = req.body.servicios || [];
+
+        if (!Array.isArray(servicios)) {
+            servicios = [servicios];
+        }
+
+        const renderError = (msg) => {
+            Servicio.obtenerTodos((errS, serviciosData) => {
+                Barbero.obtenerTodos((errB, barberosData) => {
+
+                    return res.render('clientes/reservar', {
+                        titulo: 'Reservar Cita',
+                        servicios: serviciosData,
+                        barberos: barberosData,
+                        error: msg
+                    });
+
+                });
+            });
+        };
+
         // ==========================
         // VALIDAR FECHA Y HORA
         // ==========================
 
         const ahora = new Date();
-
         const fechaActual = ahora.toISOString().split('T')[0];
 
         if (fecha < fechaActual) {
-
-            return res.send(`
-                <h2>Fecha inválida</h2>
-                <p>No puedes reservar una fecha pasada.</p>
-                <a href="/reservar">Volver</a>
-            `);
-
+            return renderError('No puedes reservar una fecha pasada.');
         }
 
         if (fecha === fechaActual) {
@@ -72,15 +83,7 @@ const citaController = {
             const horaReserva = hora.substring(0, 5);
 
             if (horaReserva <= horaActual) {
-
-                return res.send(`
-                    <h2>Horario inválido</h2>
-                    <p>
-                        Debes seleccionar una hora posterior a la actual.
-                    </p>
-                    <a href="/reservar">Volver</a>
-                `);
-
+                return renderError('Selecciona una hora que no sea pasada.');
             }
 
         }
@@ -96,128 +99,81 @@ const citaController = {
             (errorDisponibilidad, citasExistentes) => {
 
                 if (errorDisponibilidad) {
-
                     console.error(errorDisponibilidad);
-
-                    return res.send(
-                        'Error verificando disponibilidad'
-                    );
-
+                    return renderError('Error verificando disponibilidad.');
                 }
 
                 if (citasExistentes.length > 0) {
-
-                    return res.send(`
-                        <h2>Horario no disponible</h2>
-
-                        <p>
-                            El barbero ya tiene una cita registrada
-                            para esa fecha y hora.
-                        </p>
-
-                        <a href="/reservar">
-                            Volver
-                        </a>
-                    `);
-
+                    return renderError('El barbero ya tiene una cita en esa fecha y hora.');
                 }
 
-                let servicios = req.body.servicios || [];
+                // ==========================
+                // CLIENTE LOGUEADO
+                // ==========================
 
-                if (!Array.isArray(servicios)) {
-                    servicios = [servicios];
-                }
+                const usuario_id = req.session.usuario.id;
 
-                Cliente.crear(
-                    {
-                        nombre,
-                        telefono,
-                        email
-                    },
-                    (errorCliente, resultadoCliente) => {
+                Cliente.obtenerPorUsuario(usuario_id, (errorCliente, cliente) => {
 
-                        if (errorCliente) {
-                            console.error(errorCliente);
-                            return res.send(
-                                'Error al registrar cliente'
-                            );
-                        }
+                    if (errorCliente || !cliente.length) {
+                        return renderError('Cliente no encontrado.');
+                    }
 
-                        const cliente_id =
-                            resultadoCliente.insertId;
+                    const cliente_id = cliente[0].id;
 
-                        Cita.crear(
-                            {
-                                cliente_id,
-                                barbero_id,
-                                fecha,
-                                hora,
-                                observacion
-                            },
-                            (errorCita, resultadoCita) => {
+                    // ==========================
+                    // CREAR CITA
+                    // ==========================
 
-                                if (errorCita) {
-                                    console.error(errorCita);
-                                    return res.send(
-                                        'Error al registrar cita'
-                                    );
-                                }
+                    Cita.crear(
+                        {
+                            cliente_id,
+                            barbero_id,
+                            fecha,
+                            hora,
+                            observacion
+                        },
+                        (errorCita, resultadoCita) => {
 
-                                const cita_id =
-                                    resultadoCita.insertId;
+                            if (errorCita) {
+                                console.error(errorCita);
+                                return renderError('Error al registrar cita.');
+                            }
 
-                                let pendientes =
-                                    servicios.length;
+                            const cita_id = resultadoCita.insertId;
 
-                                if (pendientes === 0) {
+                            if (servicios.length === 0) {
+                                return res.redirect('/confirmacion');
+                            }
 
-                                    return res.redirect(
-                                        '/confirmacion'
-                                    );
+                            let pendientes = servicios.length;
 
-                                }
+                            servicios.forEach(servicio_id => {
 
-                                servicios.forEach(
-                                    servicio_id => {
+                                CitaServicio.crear(
+                                    cita_id,
+                                    servicio_id,
+                                    (errorRelacion) => {
 
-                                        CitaServicio.crear(
-                                            cita_id,
-                                            servicio_id,
-                                            (errorRelacion) => {
+                                        if (errorRelacion) {
+                                            console.error(errorRelacion);
+                                        }
 
-                                                if (
-                                                    errorRelacion
-                                                ) {
+                                        pendientes--;
 
-                                                    console.error(
-                                                        errorRelacion
-                                                    );
-
-                                                }
-
-                                                pendientes--;
-
-                                                if (
-                                                    pendientes === 0
-                                                ) {
-
-                                                    return res.redirect(
-                                                        '/confirmacion'
-                                                    );
-
-                                                }
-
-                                            }
-                                        );
+                                        if (pendientes === 0) {
+                                            return res.redirect('/confirmacion');
+                                        }
 
                                     }
                                 );
 
-                            }
-                        );
+                            });
 
-                    }
-                );
+                        }
+                    );
+
+                });
 
             }
         );

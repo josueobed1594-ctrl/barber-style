@@ -8,6 +8,13 @@
         Reservar Cita
     </h1>
 
+    <!-- 🔥 MENSAJE DE ERROR -->
+    <% if (typeof error !== 'undefined') { %>
+        <div class="alert alert-danger text-center">
+            <%= error %>
+        </div>
+    <% } %>
+
     <form action="/reservar" method="POST">
 
         <div class="row">
@@ -21,21 +28,6 @@
                 <input
                     type="text"
                     name="nombre"
-                    class="form-control"
-                    required
-                >
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-                <label class="form-label">
-                    Teléfono
-                </label>
-
-                <input
-                    type="text"
-                    name="telefono"
                     class="form-control"
                     required
                 >
@@ -111,9 +103,7 @@
                 <% barberos.forEach(barbero => { %>
 
                     <option value="<%= barbero.id %>">
-
                         <%= barbero.nombre %>
-
                     </option>
 
                 <% }) %>

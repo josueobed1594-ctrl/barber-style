@@ -10,37 +10,72 @@
 
     <div class="row">
 
-        <% servicios.forEach(servicio => { %>
+        <% servicios.forEach(servicio => { 
 
-            <div class="col-md-6 col-lg-4 mb-4">
+            // 🔥 normalizar nombre (sin acentos, minúsculas)
+            const nombre = servicio.nombre
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim();
 
-                <div class="card h-100">
+            let img = 'premium.jpg'; // fallback
 
-                    <div class="card-body">
+            // 🔥 MAPEO LIMPIO (SIN DUPLICADOS)
+            if (nombre.includes('corte') && nombre.includes('barba')) {
+                img = 'corte-barba.jpg';
+            } 
+            else if (nombre.includes('premium')) {
+                img = 'corte-premium.jpg';
+            }
+            else if (nombre.includes('barba')) {
+                img = 'barba.jpg';
+            }
+            else if (nombre.includes('corte')) {
+                img = 'corte-clasico.jpg';
+            }
 
-                        <h4 class="card-title">
-                            <%= servicio.nombre %>
-                        </h4>
+        %>
 
-                        <p class="card-text">
-                            <%= servicio.descripcion %>
-                        </p>
+        <div class="col-md-6 col-lg-4 mb-4">
 
-                        <p>
-                            <strong>Precio:</strong>
-                            S/ <%= servicio.precio %>
-                        </p>
+            <div class="card h-100 shadow-sm service-card">
 
-                        <p>
-                            <strong>Duración:</strong>
-                            <%= servicio.duracion %> min
-                        </p>
+                <img
+                    src="/img/servicios/<%= img %>"
+                    class="card-img-top"
+                    alt="<%= servicio.nombre %>"
+                >
 
-                    </div>
+                <div class="card-body">
+
+                    <h4 class="card-title">
+                        <%= servicio.nombre %>
+                    </h4>
+
+                    <p class="card-text">
+                        <%= servicio.descripcion %>
+                    </p>
+
+                    <p>
+                        <strong>Precio:</strong>
+                        S/ <%= servicio.precio %>
+                    </p>
+
+                    <p>
+                        <strong>Duración:</strong>
+                        <%= servicio.duracion %> min
+                    </p>
+
+                    <a href="/reservar" class="btn btn-warning w-100 mt-3">
+                        Reservar
+                    </a>
 
                 </div>
 
             </div>
+
+        </div>
 
         <% }) %>
 
@@ -49,3 +84,28 @@
 </div>
 
 <%- include('../layouts/footer') %>
+
+<style>
+
+.service-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.service-card img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.service-card a {
+    font-weight: 500;
+}
+
+</style>

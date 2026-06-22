@@ -22,6 +22,9 @@ const Cita = {
 
     verificarDisponibilidad: (barbero_id, fecha, hora, callback) => {
 
+        // 🔥 NORMALIZAR HORA (IMPORTANTE)
+        const horaNormalizada = hora.length === 5 ? hora + ':00' : hora;
+
         const sql = `
             SELECT id
             FROM citas
@@ -31,7 +34,7 @@ const Cita = {
             AND estado <> 'cancelada'
         `;
 
-        db.query(sql, [barbero_id, fecha, hora], callback);
+        db.query(sql, [barbero_id, fecha, horaNormalizada], callback);
 
     },
 

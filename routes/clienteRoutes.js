@@ -2,14 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 const clienteController = require('../controllers/clienteController');
-const Cita = require('../models/Cita');
 
+// =========================
+// HOME CLIENTE
+// =========================
 router.get('/', clienteController.inicio);
 
+// =========================
+// CONFIRMACION
+// =========================
 router.get('/confirmacion', (req, res) => {
     res.render('clientes/confirmacion');
 });
 
+// =========================
+// MIDDLEWARE CLIENTE
+// =========================
 function protegerCliente(req, res, next) {
 
     if (!req.session.usuario) {
@@ -23,19 +31,9 @@ function protegerCliente(req, res, next) {
     next();
 }
 
-router.get('/clientes/dashboard', protegerCliente, (req, res) => {
-
-    Cita.obtenerPorCliente(req.session.usuario.id, (err, citas) => {
-
-        if (err) return res.send('Error');
-
-        res.render('clientes/dashboard', {
-            titulo: 'Mis Citas',
-            citas
-        });
-
-    });
-
-});
+// =========================
+// DASHBOARD CLIENTE (CORRECTO)
+// =========================
+router.get('/clientes/dashboard', protegerCliente, clienteController.dashboard);
 
 module.exports = router;

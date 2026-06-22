@@ -55,12 +55,12 @@ const citaRoutes = require('./routes/citaRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const clienteDashboardRoutes = require('./routes/clienteDashboardRoutes');
 
-app.use('/', clienteRoutes);
 app.use('/', authRoutes);
+app.use('/', clienteRoutes);
 app.use('/', servicioRoutes);
 app.use('/', citaRoutes);
-app.use('/', adminRoutes);
-app.use('/', clienteDashboardRoutes);
+app.use('/admin', adminRoutes);
+app.use('/clientes', clienteDashboardRoutes);
 
 // =============================
 // START SERVER

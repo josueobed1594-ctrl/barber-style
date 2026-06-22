@@ -62,12 +62,22 @@ const citaController = {
             });
         };
 
-        // ==========================
-        // VALIDAR FECHA Y HORA
+    
+       // ==========================
+        // VALIDAR FECHA Y HORA (PERÚ)
         // ==========================
 
-        const ahora = new Date();
-        const fechaActual = ahora.toISOString().split('T')[0];
+        const ahoraPeru = new Date(
+            new Date().toLocaleString('en-US', {
+                timeZone: 'America/Lima'
+            })
+        );
+
+        const anio = ahoraPeru.getFullYear();
+        const mes = String(ahoraPeru.getMonth() + 1).padStart(2, '0');
+        const dia = String(ahoraPeru.getDate()).padStart(2, '0');
+
+        const fechaActual = `${anio}-${mes}-${dia}`;
 
         if (fecha < fechaActual) {
             return renderError('No puedes reservar una fecha pasada.');
@@ -75,15 +85,19 @@ const citaController = {
 
         if (fecha === fechaActual) {
 
-            const horaActual =
-                String(ahora.getHours()).padStart(2, '0') +
-                ':' +
-                String(ahora.getMinutes()).padStart(2, '0');
+            const horaActualMin =
+                ahoraPeru.getHours() * 60 +
+                ahoraPeru.getMinutes();
 
-            const horaReserva = hora.substring(0, 5);
+            const [h, m] = hora.split(':').map(Number);
 
-            if (horaReserva <= horaActual) {
-                return renderError('Selecciona una hora que no sea pasada.');
+            const horaReservaMin =
+                (h * 60) + m;
+
+            if (horaReservaMin <= horaActualMin) {
+                return renderError(
+                    'Debes seleccionar una hora posterior a la actual.'
+                );
             }
 
         }

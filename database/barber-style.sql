@@ -58,7 +58,7 @@ CREATE TABLE `cita_servicios` (
   KEY `servicio_id` (`servicio_id`),
   CONSTRAINT `cita_servicios_ibfk_1` FOREIGN KEY (`cita_id`) REFERENCES `citas` (`id`) ON DELETE CASCADE,
   CONSTRAINT `cita_servicios_ibfk_2` FOREIGN KEY (`servicio_id`) REFERENCES `servicios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `cita_servicios` (
 
 LOCK TABLES `cita_servicios` WRITE;
 /*!40000 ALTER TABLE `cita_servicios` DISABLE KEYS */;
-INSERT INTO `cita_servicios` VALUES (1,1,3),(2,1,2),(5,3,3),(6,4,4);
+INSERT INTO `cita_servicios` VALUES (19,18,3),(20,20,2),(21,21,3),(22,22,2);
 /*!40000 ALTER TABLE `cita_servicios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +92,7 @@ CREATE TABLE `citas` (
   KEY `barbero_id` (`barbero_id`),
   CONSTRAINT `citas_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`id`),
   CONSTRAINT `citas_ibfk_2` FOREIGN KEY (`barbero_id`) REFERENCES `barberos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,7 @@ CREATE TABLE `citas` (
 
 LOCK TABLES `citas` WRITE;
 /*!40000 ALTER TABLE `citas` DISABLE KEYS */;
-INSERT INTO `citas` VALUES (1,1,3,'2026-06-06','09:00:00','confirmada','gracias','2026-06-06 22:52:00'),(3,3,3,'2026-06-15','12:00:00','confirmada','nuevo','2026-06-14 14:35:34'),(4,4,3,'2026-06-15','09:00:00','confirmada','asdas','2026-06-14 16:25:45');
+INSERT INTO `citas` VALUES (18,13,3,'2026-06-23','14:00:00','pendiente','asfas','2026-06-22 18:51:01'),(19,13,3,'2026-06-30','15:00:00','pendiente','dsfdsa','2026-06-22 19:54:14'),(20,14,3,'2026-06-23','16:00:00','pendiente','asfasfas','2026-06-22 20:05:37'),(21,14,3,'2026-06-25','16:00:00','pendiente','asdfad','2026-06-22 20:28:48'),(22,14,2,'2026-06-26','13:00:00','pendiente','fsd','2026-06-22 20:29:09');
 /*!40000 ALTER TABLE `citas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,8 +118,11 @@ CREATE TABLE `clientes` (
   `telefono` varchar(20) NOT NULL,
   `email` varchar(150) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `usuario_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `fk_clientes_usuario_id` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +131,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (1,'areis','987654321','prueba@gmail.com','2026-06-06 22:52:00'),(2,'dfasd','987654321','prueba@gmail.com','2026-06-06 23:00:49'),(3,'alvaro','987654','alvaro@gmail.com','2026-06-14 14:35:34'),(4,'alvaro','987654321','prueba2@gmail.com','2026-06-14 16:25:45');
+INSERT INTO `clientes` VALUES (13,'prueba4','','prueba4@gmail.com','2026-06-22 18:47:08',11),(14,'pruaba10','999999999','pruaba10@gmail.com','2026-06-22 20:05:11',12);
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -178,7 +181,7 @@ CREATE TABLE `usuarios` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -187,7 +190,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'Administrador','admin@barberstyle.com','$2b$10$FoZM.K7iSR/zrjEhLjk8feQBhDtVwqPMa2dmIkBAuGASN20yRWOQu','admin','2026-06-06 22:22:26'),(2,'alvaro','alvaro@gmail.com','$2b$10$eFeOtZ6SOOGdl8D7e/Is2Ou2Jg09J.GKKFs5muLH03bugozjP5IeO','admin','2026-06-14 15:53:21'),(3,'prueba','prueba@gmail.com','$2b$10$j9SvTWfa8.ygaDhl.jRA4eEShiRMP5Q1GSun7/0jhDWqLIM6ruc9m','cliente','2026-06-14 16:04:19'),(5,'prueba2','prueba2@gmail.com','$2b$10$vYjeAuUjvZrdSWXplfPPQebEykhXZfhe.K9.IXCfneD6t1EBArwPG','cliente','2026-06-14 16:07:31');
+INSERT INTO `usuarios` VALUES (1,'Administrador','admin@barberstyle.com','$2b$10$FoZM.K7iSR/zrjEhLjk8feQBhDtVwqPMa2dmIkBAuGASN20yRWOQu','admin','2026-06-06 22:22:26'),(8,'prueba1','prueba1@gmail.com','$2b$10$KuMkWxWGwoLE4NHOTc20sO4VoUtC9UI2KdbSYL.RpOObhAKPkZUaW','cliente','2026-06-22 18:09:33'),(9,'prueba2','prueba2@gmail.com','$2b$10$IndZWV1aCkM8SXpDUvC25e5k8Gc7CzC0ZKc6cn89.dH.SHRJLivUK','cliente','2026-06-22 18:16:52'),(10,'prueba333','prueba333@gmail.com','$2b$10$EWUGcMhP4.mTiau4/DrGIeGjZW2s8DUap.5lPNtLVfP2a8nPDwtaS','cliente','2026-06-22 18:22:13'),(11,'prueba4','prueba4@gmail.com','$2b$10$0Z3E39f4FjrOBcPjyyCumeBhYnYyHANbelXTHbNVak0EMy3d2592G','cliente','2026-06-22 18:47:08'),(12,'pruaba10','pruaba10@gmail.com','$2b$10$TnsCK0cSV38Q29nclQZtZeSwGjwB2S5b4gTfLGvJ3ono2n1KSYEza','cliente','2026-06-22 20:05:11');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -200,4 +203,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-14 20:21:03
+-- Dump completed on 2026-06-22 16:23:38

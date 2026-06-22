@@ -8,7 +8,7 @@ const authMiddleware = require('../middlewares/authMiddleware');
 // =============================
 // DASHBOARD
 // =============================
-router.get('/admin/dashboard', authMiddleware, (req, res) => {
+router.get('/dashboard', authMiddleware, (req, res) => {
 
     Cita.contarPorEstado((err, resultados) => {
 
@@ -65,7 +65,7 @@ router.get('/admin/dashboard', authMiddleware, (req, res) => {
 // =============================
 // LISTAR CITAS
 // =============================
-router.get('/admin/citas', authMiddleware, (req, res) => {
+router.get('/citas', authMiddleware, (req, res) => {
 
     Cita.obtenerTodas((err, citas) => {
 
@@ -87,7 +87,7 @@ router.get('/admin/citas', authMiddleware, (req, res) => {
 // =============================
 // ACCIONES
 // =============================
-router.post('/admin/citas/confirmar/:id', authMiddleware, (req, res) => {
+router.post('/citas/confirmar/:id', authMiddleware, (req, res) => {
 
     Cita.actualizarEstado(req.params.id, 'confirmada', (err) => {
         if (err) return res.json({ ok: false });
@@ -96,7 +96,7 @@ router.post('/admin/citas/confirmar/:id', authMiddleware, (req, res) => {
 
 });
 
-router.post('/admin/citas/cancelar/:id', authMiddleware, (req, res) => {
+router.post('/citas/cancelar/:id', authMiddleware, (req, res) => {
 
     Cita.actualizarEstado(req.params.id, 'cancelada', (err) => {
         if (err) return res.json({ ok: false });
@@ -105,7 +105,7 @@ router.post('/admin/citas/cancelar/:id', authMiddleware, (req, res) => {
 
 });
 
-router.post('/admin/citas/finalizar/:id', authMiddleware, (req, res) => {
+router.post('/citas/finalizar/:id', authMiddleware, (req, res) => {
 
     Cita.actualizarEstado(req.params.id, 'finalizada', (err) => {
         if (err) return res.json({ ok: false });
@@ -114,7 +114,7 @@ router.post('/admin/citas/finalizar/:id', authMiddleware, (req, res) => {
 
 });
 
-router.post('/admin/citas/eliminar/:id', authMiddleware, (req, res) => {
+router.post('/citas/eliminar/:id', authMiddleware, (req, res) => {
 
     Cita.eliminar(req.params.id, (err) => {
         if (err) return res.json({ ok: false });
